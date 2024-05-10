@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
+import React, { FC, PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from 'react';
 
 type AudioContextType = {
   isPlaying: boolean
@@ -25,13 +25,21 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children, audioUrl }) =>
   
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+  const [pausas, setPausas] = useState<boolean>(false)
+  const [luces, setLuces] = useState<number>(0)
+
 
   useEffect(() => {
     const newAudio = new Audio(audioUrl);
     setAudio(newAudio)
   }, [])
 
+  useEffect(() => {
+    setLuces(prev => prev + 1)
+  }, [pausas])
+
   const restart = () => {
+    setPausas(!pausas)
     if (audio) {
       audio.pause();
       audio.currentTime = 0;
@@ -40,6 +48,7 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children, audioUrl }) =>
   };
 
   const togglePlay = () => {
+    setPausas(!pausas)
 
     if (audio) {
       if (isPlaying) {
@@ -57,6 +66,8 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children, audioUrl }) =>
 
   const playAudio = (inicio: number, fin: number) => {
 
+    setPausas(!pausas)
+
     if (audio) {
     const duracion = fin - inicio
 
@@ -70,16 +81,18 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children, audioUrl }) =>
     }
     setIsPlaying(true);
 
-    const timer = setTimeout(() => {
-      audio.pause()
-      setIsPlaying(false);
-    }, duracion* 1000)    
 
     audio.onended = () => {
       restart()
     };
 
-    return () => clearTimeout(timer)      
+    // setTimeout(() => {
+    //   if (luces === lucesInicial) {
+    //   audio.pause();
+    //   setIsPlaying(false);
+    //   }
+    // }, duracion * 1000);
+
     }
   };
 
