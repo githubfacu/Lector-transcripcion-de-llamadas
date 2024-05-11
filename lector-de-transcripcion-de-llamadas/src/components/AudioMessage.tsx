@@ -11,10 +11,10 @@ const AudioMessage = () => {
   
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-center">
       <AudioProvider audioUrl={audioUrl}>
-        <AudioController />
         <Conversacion messages={data} />
+        <AudioController />
       </AudioProvider>      
     </div>
   )

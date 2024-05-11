@@ -1,3 +1,4 @@
+import { fa0 } from '@fortawesome/free-solid-svg-icons';
 import React, { FC, PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from 'react';
 
 type AudioContextType = {
@@ -25,9 +26,7 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children, audioUrl }) =>
   
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
-  const [pausas, setPausas] = useState<boolean>(false)
-  const [luces, setLuces] = useState<number>(0)
-
+  const [tempoCurrent, setTempoCurrent] = useState<boolean>(false)
 
   useEffect(() => {
     const newAudio = new Audio(audioUrl);
@@ -35,11 +34,11 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children, audioUrl }) =>
   }, [])
 
   useEffect(() => {
-    setLuces(prev => prev + 1)
-  }, [pausas])
+    console.log(tempoCurrent);
+  }, [isPlaying])
 
   const restart = () => {
-    setPausas(!pausas)
+
     if (audio) {
       audio.pause();
       audio.currentTime = 0;
@@ -48,7 +47,6 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children, audioUrl }) =>
   };
 
   const togglePlay = () => {
-    setPausas(!pausas)
 
     if (audio) {
       if (isPlaying) {
@@ -64,38 +62,27 @@ export const AudioProvider: FC<AudioProviderProps> = ({ children, audioUrl }) =>
     }
   };
 
+
   const playAudio = (inicio: number, fin: number) => {
 
-    setPausas(!pausas)
-
     if (audio) {
-    const duracion = fin - inicio
 
-    if (isPlaying === true) {
-      audio.pause();
-      audio.currentTime = inicio;
-      audio.play();
-    } else {
-      audio.currentTime = inicio;
-      audio.play();
-    }
-    setIsPlaying(true);
+      if (isPlaying === true) {
+        audio.pause();
+        audio.currentTime = inicio;
+        audio.play();
+      } else {
+        audio.currentTime = inicio;
+        audio.play();
+      }
+      setIsPlaying(true);
 
-
-    audio.onended = () => {
-      restart()
-    };
-
-    // setTimeout(() => {
-    //   if (luces === lucesInicial) {
-    //   audio.pause();
-    //   setIsPlaying(false);
-    //   }
-    // }, duracion * 1000);
+      audio.onended = () => {
+        restart()
+      };
 
     }
   };
-
 
   return (
     <AudioContext.Provider value={{ playAudio, togglePlay, restart, isPlaying}}>

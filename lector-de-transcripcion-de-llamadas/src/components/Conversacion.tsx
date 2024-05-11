@@ -11,11 +11,11 @@ const Conversacion = ({messages}: ConversacionProps) => {
   const {playAudio} = useAudio()
 
   return (
-    <div>
+    <div className="flex flex-col gap-2 mb-4">
         {
           messages.map((message, index) => (
             <div key={index}>
-              <p className="cursor-pointer" 
+              <p className={`${message.role === 'agent'? ' bg-slate-300' : 'bg-slate-100'} cursor-pointer rounded`}
               onClick={() => playAudio(message.start, message.end)}>{message.content}</p>
             </div>
           ))
