@@ -15,7 +15,7 @@ const Conversacion = ({messages}: ConversacionProps) => {
         {
           messages.map((message, index) => (
             <div key={index}>
-              <p className={`${message.role === 'agent'? ' bg-slate-300' : 'bg-slate-100'} cursor-pointer rounded`}
+              <p className={`${message.role === 'agent'? ' bg-slate-100' : 'bg-slate-300 ml-8'} cursor-pointer rounded px-4 py-3`}
               onClick={() => playAudio(message.start, message.end)}>{message.content}</p>
             </div>
           ))
